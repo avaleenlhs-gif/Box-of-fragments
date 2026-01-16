@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Box of Fragments</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <canvas id="ocean-bg" aria-hidden="true"></canvas>
+    <div class="water-bg" aria-hidden="true"></div>
+    <div class="ripple-layer" aria-hidden="true"></div>
+
+    <header class="controls">
+      <button id="btn-new-box" type="button">+ 新建盒子</button>
+      <button id="btn-settings" type="button" class="ghost">设置</button>
+      <div class="status" id="agent-status" title="Agent 状态">离线</div>
+    </header>
+
+    <main id="canvas" aria-label="记忆碎片空间"></main>
+
+    <!-- 卷轴对话 -->
+    <div id="scroll-overlay" aria-hidden="true">
+      <div id="scroll-paper" role="dialog" aria-modal="true" aria-label="卷轴">
+        <div class="side-curl left" aria-hidden="true"></div>
+        <div class="side-curl right" aria-hidden="true"></div>
+
+        <button class="close-btn" id="btn-close" type="button" aria-label="关闭">×</button>
+
+        <input id="box-title-edit" value="未命名的记忆" />
+
+        <div id="chat-area" aria-label="对话内容"></div>
+
+        <div class="input-area">
+          <div id="seal-banner" class="seal-banner" hidden>
+            已封存 · 你可以回看，但无法编辑。点击下方「开启」继续。
+          </div>
+          <div class="composer">
+            <button id="btn-attach" type="button" class="attach-btn" aria-label="上传图片" title="上传图片">
+              <span class="btn-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M7 6h10a2 2 0 012 2v8a2 2 0 01-2 2H7a2 2 0 01-2-2V8a2 2 0 012-2zm0 2v8h10V8H7zm2 7l2-2 1.5 1.5L16 13l2 2H9zm7-6.5a1 1 0 11-2 0 1 1 0 012 0z"/>
+                </svg>
+              </span>
+            </button>
+            <textarea
+              id="user-input"
+              placeholder="在这里写下你的记忆…（Enter 发送，Shift+Enter 换行）"
+            ></textarea>
+            <button id="btn-send" type="button" class="send-btn" aria-label="发送" title="发送">
+              <span class="btn-icon" aria-hidden="true">
+                <!-- send icon -->
+                <svg class="icon-send" viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M3.4 20.3l18-8.3c.6-.3.6-1.1 0-1.4l-18-8.3c-.6-.3-1.3.2-1.2.9l1.4 6.7 10.8.7c.4 0 .4.6 0 .7l-10.8.7-1.4 6.7c-.1.7.6 1.2 1.2.9z"/>
+                </svg>
+                <!-- stop icon (hidden by default) -->
+                <svg class="icon-stop" viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M7 7h10v10H7z"/>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <input id="image-input" type="file" accept="image/*" multiple hidden />
+          <div id="attachment-preview" class="attachment" hidden>
+            <div id="attachment-list" class="attachment-list" aria-label="已选择图片"></div>
+            <div class="attachment-hint" id="attachment-hint"></div>
+          </div>
+          <div class="seal-area">
+            <button id="btn-seal" type="button" class="seal-btn">封存</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 设置弹窗 -->
+    <div id="settings-overlay" aria-hidden="true">
+      <div id="settings-panel" role="dialog" aria-modal="true" aria-label="设置">
+        <button class="close-btn small" id="btn-settings-close" type="button" aria-label="关闭">×</button>
+        <h2>设置</h2>
+
+        <label class="field">
+          <div class="field-title">Agent 代理地址（必填）</div>
+          <input
+            id="agent-proxy-url"
+            type="text"
+            placeholder="例如：http://127.0.0.1:8787/api/chat 或 你的 Worker 地址"
+          />
+          <div class="field-hint">前端不会保存任何 API Key；Key 只放在你部署的代理服务里。</div>
+        </label>
+
+        <div class="row">
+          <button id="btn-test-agent" type="button">测试连接</button>
+        </div>
+      </div>
+    </div>
+
+    <script defer src="./ocean-bg.js"></script>
+    <script defer src="./app.js"></script>
+  </body>
+</html>
+
